@@ -54,9 +54,9 @@ export async function GET(request: Request) {
         })
 
         const mentions = detectMentions(output.answer_text, project.brand_name, project.competitors || [])
-        const citations = extractCitations(output.answer_text, project.domain)
-        const sentiment = analyzeSentiment(output.answer_text, project.brand_name)
-        const sov = computeShareOfVoice(mentions, project.brand_name, project.competitors || [])
+        const citations = extractCitations(output.answer_text)
+        const sentiment = analyzeSentiment(output.answer_text)
+        const sov = computeShareOfVoice(mentions.brand_count, mentions.competitors)
         const citScore = computeCitationScore(citations, project.domain)
 
         await sb.from('run_scores').insert({
@@ -66,7 +66,7 @@ export async function GET(request: Request) {
           sentiment_score: sentiment.score,
           sentiment_label: sentiment.label,
           share_of_voice: sov,
-          risk_flags: sentiment.riskFlags,
+          risk_flags: sentiment.risk_flags,
         })
 
         await sb.from('runs').update({ status: 'done' }).eq('id', run.id)
