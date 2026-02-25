@@ -21,27 +21,40 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
-      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm">
-        <div className="flex items-center gap-2 mb-6">
-          <div className="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center text-white font-bold text-sm">G</div>
-          <span className="font-semibold text-slate-900">GEO Monitor</span>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-8 w-full max-w-sm">
+        <div className="flex items-center gap-2 mb-8">
+          <div className="w-7 h-7 rounded-md bg-teal-500 flex items-center justify-center text-white font-bold text-xs">G</div>
+          <span className="font-semibold text-gray-900 text-sm">GEO Monitor</span>
         </div>
-        <h1 className="text-2xl font-bold text-slate-900 mb-1">Create account</h1>
-        <p className="text-slate-500 text-sm mb-6">Start monitoring your brand in AI</p>
-        <form onSubmit={handleSignup} className="space-y-4">
-          <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required
-            className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-purple-500 transition-colors"/>
-          <input type="password" placeholder="Password (min 8 chars)" value={password} onChange={e => setPassword(e.target.value)} required
-            className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-purple-500 transition-colors"/>
-          {message && <p className={`text-sm rounded-lg p-3 ${message.includes('Check') ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-500'}`}>{message}</p>}
+        <h1 className="text-xl font-semibold text-gray-900 mb-1">Create account</h1>
+        <p className="text-gray-500 text-sm mb-6">Start monitoring your brand in AI</p>
+        <form onSubmit={handleSignup} className="space-y-3">
+          <input
+            type="email" placeholder="Email" value={email}
+            onChange={e => setEmail(e.target.value)} required
+            className="w-full border border-gray-200 rounded-md px-3 py-2.5 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-50 transition-all text-gray-900 placeholder:text-gray-400"
+          />
+          <input
+            type="password" placeholder="Password — min. 8 characters" value={password}
+            onChange={e => setPassword(e.target.value)} required
+            className="w-full border border-gray-200 rounded-md px-3 py-2.5 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-50 transition-all text-gray-900 placeholder:text-gray-400"
+          />
+          {message && (
+            <p className={`text-xs rounded-md px-3 py-2 border ${
+              message.includes('Check')
+                ? 'bg-emerald-50 border-emerald-100 text-emerald-700'
+                : 'bg-red-50 border-red-100 text-red-600'
+            }`}>{message}</p>
+          )}
           <button type="submit" disabled={loading}
-            className="w-full bg-purple-600 hover:bg-purple-500 disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg transition-all">
+            className="w-full bg-teal-600 hover:bg-teal-700 disabled:opacity-40 text-white font-medium py-2.5 rounded-md text-sm transition-colors">
             {loading ? 'Creating account…' : 'Create account'}
           </button>
         </form>
-        <p className="text-center text-sm text-slate-500 mt-4">
-          Already have an account? <Link href="/auth/login" className="text-purple-600 font-semibold">Sign in</Link>
+        <p className="text-center text-sm text-gray-500 mt-5">
+          Already have an account?{' '}
+          <Link href="/auth/login" className="text-teal-600 hover:text-teal-700 font-medium">Sign in</Link>
         </p>
       </div>
     </div>

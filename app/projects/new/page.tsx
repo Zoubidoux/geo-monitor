@@ -34,48 +34,79 @@ export default function NewProjectPage() {
     router.push(`/projects/${project!.id}`)
   }
 
+  const inputClass = "w-full border border-gray-200 rounded-md px-3 py-2.5 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-50 transition-all text-gray-900 placeholder:text-gray-400"
+
   return (
-    <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 px-6 py-4">
-        <div className="max-w-6xl mx-auto flex items-center gap-4">
-          <Link href="/dashboard" className="text-slate-400 hover:text-slate-600 text-sm transition-colors">← Dashboard</Link>
-          <span className="text-slate-200">|</span>
-          <span className="font-semibold text-slate-900 text-sm">New Project</span>
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white border-b border-gray-200 px-6 py-3.5">
+        <div className="max-w-6xl mx-auto flex items-center gap-2 text-sm">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-md bg-teal-500 flex items-center justify-center text-white font-bold text-xs">G</div>
+            <span className="font-semibold text-gray-900">GEO Monitor</span>
+          </div>
+          <span className="text-gray-300 mx-1">/</span>
+          <Link href="/dashboard" className="text-gray-500 hover:text-gray-700 transition-colors">Dashboard</Link>
+          <span className="text-gray-300 mx-1">/</span>
+          <span className="text-gray-900 font-medium">New project</span>
         </div>
       </header>
-      <div className="max-w-lg mx-auto px-6 py-12">
-        <h1 className="text-2xl font-bold text-slate-900 mb-2">New Project</h1>
-        <p className="text-slate-500 text-sm mb-8">Set up AI monitoring for your brand</p>
-        <div className="bg-white rounded-2xl border border-slate-200 p-8">
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {[
-              { label: 'Brand Name *', key: 'brand_name', placeholder: 'Dior Beauty', type: 'text' },
-              { label: 'Domain *', key: 'domain', placeholder: 'dior.com', type: 'text' },
-              { label: 'Competitors (comma-separated)', key: 'competitors', placeholder: 'Chanel, YSL, Givenchy', type: 'text' },
-            ].map(f => (
-              <div key={f.key}>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">{f.label}</label>
-                <input type={f.type} placeholder={f.placeholder} value={(form as any)[f.key]}
-                  onChange={e => setForm(p => ({ ...p, [f.key]: e.target.value }))}
-                  className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-100 transition-all"/>
-              </div>
-            ))}
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { label: 'Country', key: 'country' },
-                { label: 'Language', key: 'language' },
-              ].map(f => (
-                <div key={f.key}>
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">{f.label}</label>
-                  <input value={(form as any)[f.key]} onChange={e => setForm(p => ({ ...p, [f.key]: e.target.value }))}
-                    className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-purple-500 transition-all"/>
-                </div>
-              ))}
+
+      <div className="max-w-md mx-auto px-6 py-10">
+        <h1 className="text-lg font-semibold text-gray-900 mb-1">New project</h1>
+        <p className="text-gray-500 text-sm mb-7">Set up AI monitoring for your brand</p>
+
+        <div className="bg-white rounded-xl border border-gray-200 p-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Brand name <span className="text-gray-400 font-normal">*</span>
+              </label>
+              <input type="text" placeholder="Dior Beauty" value={form.brand_name}
+                onChange={e => setForm(p => ({ ...p, brand_name: e.target.value }))}
+                className={inputClass} />
             </div>
-            {error && <p className="text-red-500 text-sm bg-red-50 rounded-lg p-3">{error}</p>}
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Domain <span className="text-gray-400 font-normal">*</span>
+              </label>
+              <input type="text" placeholder="dior.com" value={form.domain}
+                onChange={e => setForm(p => ({ ...p, domain: e.target.value }))}
+                className={inputClass} />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Competitors <span className="text-gray-400 font-normal">comma-separated</span>
+              </label>
+              <input type="text" placeholder="Chanel, YSL, Givenchy" value={form.competitors}
+                onChange={e => setForm(p => ({ ...p, competitors: e.target.value }))}
+                className={inputClass} />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Country</label>
+                <input value={form.country}
+                  onChange={e => setForm(p => ({ ...p, country: e.target.value }))}
+                  className={inputClass} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Language</label>
+                <input value={form.language}
+                  onChange={e => setForm(p => ({ ...p, language: e.target.value }))}
+                  className={inputClass} />
+              </div>
+            </div>
+
+            {error && (
+              <p className="text-red-600 text-xs bg-red-50 border border-red-100 rounded-md px-3 py-2">{error}</p>
+            )}
+
             <button type="submit" disabled={loading || !form.brand_name || !form.domain}
-              className="w-full bg-purple-600 hover:bg-purple-500 disabled:opacity-40 text-white font-semibold py-3 rounded-xl transition-all mt-2">
-              {loading ? 'Creating…' : 'Create Project →'}
+              className="w-full bg-teal-600 hover:bg-teal-700 disabled:opacity-40 text-white font-medium py-2.5 rounded-md text-sm transition-colors mt-2">
+              {loading ? 'Creating…' : 'Create project'}
             </button>
           </form>
         </div>
