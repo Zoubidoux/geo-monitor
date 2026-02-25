@@ -7,14 +7,15 @@ const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 export async function POST(
   _request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   const sb = createServiceClient()
-  const { data: project } = await sb.from('projects').select('*').eq('id', params.id).single()
+  const { data: project } = await sb.from('projects').select('*').eq('id', id).single()
   if (!project) return NextResponse.json({ error: 'Project not found' }, { status: 404 })
 
   const systemPrompt = `You are an AI visibility expert. Generate 10 realistic search prompts that a consumer might ask an AI assistant when looking for products/services in the category of the given brand. Each prompt should be a natural question that would surface the brand if it's mentioned by AI.
@@ -54,7 +55,7 @@ Generate 10 prompts.`
 
   // Save suggestions to DB
   const inserts = suggestions.map(text => ({
-    project_id: params.id,
+    project_id: id,
     prompt_text: text,
     source: 'ai_generated',
   }))

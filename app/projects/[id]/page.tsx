@@ -2,19 +2,20 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
-export default async function ProjectPage({ params }: { params: { id: string } }) {
+export default async function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
 
-  const { data: project } = await supabase.from('projects').select('*').eq('id', params.id).single()
+  const { data: project } = await supabase.from('projects').select('*').eq('id', id).single()
   if (!project) redirect('/dashboard')
 
-  const { data: prompts } = await supabase.from('prompts').select('*').eq('project_id', params.id).order('created_at', { ascending: false })
+  const { data: prompts } = await supabase.from('prompts').select('*').eq('project_id', id).order('created_at', { ascending: false })
   const { data: recentRuns } = await supabase
     .from('runs')
     .select('*, run_scores(*), prompts(prompt_text)')
-    .eq('project_id', params.id)
+    .eq('project_id', id)
     .order('created_at', { ascending: false })
     .limit(20)
 
