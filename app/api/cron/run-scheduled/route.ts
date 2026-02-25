@@ -46,20 +46,16 @@ export async function GET(request: Request) {
 
       try {
         const client = getLLMClient(provider)
-        const output = await client.query(prompt.prompt_text)
+        const output = await client.run({ prompt_text: prompt.prompt_text, model: 'gpt-4o' })
 
         await sb.from('run_outputs_raw').insert({
           run_id: run.id,
-          provider,
-          raw_text: output.text,
-          model_used: output.model,
-          latency_ms: output.latency_ms,
-          tokens_used: output.tokens_used,
+          raw_text: output.answer_text,
         })
 
-        const mentions = detectMentions(output.text, project.brand_name, project.competitors || [])
-        const citations = extractCitations(output.text, project.domain)
-        const sentiment = analyzeSentiment(output.text, project.brand_name)
+        const mentions = detectMentions(output.answer_text, project.brand_name, project.competitors || [])
+        const citations = extractCitations(output.answer_text, project.domain)
+        const sentiment = analyzeSentiment(output.answer_text, project.brand_name)
         const sov = computeShareOfVoice(mentions, project.brand_name, project.competitors || [])
         const citScore = computeCitationScore(citations, project.domain)
 
