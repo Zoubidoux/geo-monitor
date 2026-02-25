@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 type Project = { id: string; brand_name: string; domain: string; country: string; language: string; competitors?: string[] }
@@ -152,8 +153,7 @@ const NAV = [
     title: 'AI Insights',
     items: [
       { label: 'Overview', href: '/dashboard' },
-      { label: 'Mentions', href: '/dashboard' },
-      { label: 'Citations', href: '/dashboard' },
+      { label: 'AI Sources', href: '/dashboard/sources' },
       { label: 'Sentiment', href: '/dashboard' },
       { label: 'Competitors', href: '/dashboard' },
     ],
@@ -177,7 +177,7 @@ export default function DashboardClient({ user, projects, project, kpis, trendDa
   activePromptCount: number
 }) {
   const [activeTab, setActiveTab] = useState<'mention' | 'citation' | 'sentiment'>('mention')
-  const [activeNav, setActiveNav] = useState('Overview')
+  const pathname = usePathname()
 
   return (
     <div className="flex h-screen overflow-hidden bg-gray-50 font-sans">
@@ -200,14 +200,14 @@ export default function DashboardClient({ user, projects, project, kpis, trendDa
               <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest px-2 mb-1.5">{section.title}</p>
               <div className="space-y-0.5">
                 {section.items.map(item => (
-                  <button key={item.label}
-                    onClick={() => setActiveNav(item.label)}
-                    className={`w-full text-left flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm transition-colors ${activeNav === item.label && section.title === 'AI Insights'
-                      ? 'bg-teal-50 text-teal-700 font-medium'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                      }`}>
+                  <Link key={item.label} href={item.href}
+                    className={`w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-sm transition-colors ${
+                      pathname === item.href
+                        ? 'bg-teal-50 text-teal-700 font-medium'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    }`}>
                     {item.label}
-                  </button>
+                  </Link>
                 ))}
               </div>
             </div>
